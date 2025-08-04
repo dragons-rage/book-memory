@@ -27,40 +27,28 @@ BOOKMEMORY_DB_USERNAME=${BOOKMEMORY_DB_USERNAME:-"bookkeeper"}
 BOOKMEMORY_DB_PASSWORD=${BOOKMEMORY_DB_PASSWORD:-"placeholder"}
 ```
 
-## Diagram
+## Migrating through Database
 
-```mermaid
-flowchart TD
-  %% Identifiers %%
-  A(browser)
-  B[nginx]
-  C[uWSGI]
-  D[Flask]
-  F[(Database)]
+Make a full backup of the database
 
-  %% Charts %%
-  A --> B
-  B --> C
-  C --> D
-  D --> F
-  F --> D
+```bash
+# This is the initial dump of the data
+$ python manage.py dumpdata > datadump.json
 
-  %% Styling %%
-```
 
-## Progress
+# This section cleans the database for loading data
+python manage.py shell
 
-```mermaid
-timeline
-  title Roadmap
-  section Initial Phase
-    Research: Determine Database: django or flask
-    Initial: framework: database interface: inital classes
-    Functionality: Display data: Submit Data: Search Data
-  section Optimize Phase
-    Code Optimizations: Framework : HTML/Jinja
+> > > from django.contrib.contenttypes.models import ContentType
+> > > ContentType.objects.all().delete()
+> > > exit()
+
+# This will load the data into the database.
+$ python manage.py loaddata datadump.json
+
 ```
 
 ## Notes
 
-* Nothing to note yet
+I'll add information on adding migrating database types in the wiki later. AI
+did a good job with instructions and I'll just update that.
