@@ -7,12 +7,13 @@ from django.db.models import (
     ManyToManyField,
 )
 from django.db.models.deletion import CASCADE
-from django.utils.regex_helper import Choice
 
 
 class Author(Model):
     first_name = CharField(max_length=50)
     last_name = CharField(max_length=50)
+
+    #    objects: "BaseManager[Type[Author]]" = models.Manager()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

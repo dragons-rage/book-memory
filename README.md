@@ -22,9 +22,18 @@ This is meant to run in a container, either docker or kubernetes.
 Use .env/secrets/ect to set environment variables.
 
 ```bash
-BOOKMEMORY_DB_SERVER=${BOOKMEMORY_DB_SERVER:-""} # empty string sqlite3
-BOOKMEMORY_DB_USERNAME=${BOOKMEMORY_DB_USERNAME:-"bookkeeper"}
-BOOKMEMORY_DB_PASSWORD=${BOOKMEMORY_DB_PASSWORD:-"placeholder"}
+# Sould only need to be set on first execution. Any changes after
+# first being set will add a new user if the username doesn't exist.
+DJANGO_SUPERUSER_USERNAME='' 
+DJANGO_SUPERUSER_EMAIL=''
+DJANGO_SUPERUSER_PASSWORD=''
+```
+
+These are optional, but highly recommended. Defaults Listed
+
+```
+DATABASE_URL=sqlite:///app/data/db.sqlite3
+CACHE_URL=someredisurl
 ```
 
 ## Migrating through Database
@@ -52,3 +61,8 @@ $ python manage.py loaddata datadump.json
 
 I'll add information on adding migrating database types in the wiki later. AI
 did a good job with instructions and I'll just update that.
+
+## Links
+
+- [django-environ](https://django-environ.readthedocs.io/en/latest/index.html)
+- [django-extensions](https://django-extensions.readthedocs.io/en/latest/)

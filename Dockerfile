@@ -1,8 +1,5 @@
 FROM python:3.13.5-alpine
 
-ENV USER=admin
-ENV PASS=adminpass
-ENV EMAIL=temp@temp.com
 ENV BIND=0.0.0.0
 ENV PORT=8000
 
