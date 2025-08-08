@@ -6,7 +6,7 @@ from .models import Book, Series, Author, Location
 #
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ["title", "rating", "location"]
+    list_display = ["title", "series", "rating", "location"]
     pass
 
 
