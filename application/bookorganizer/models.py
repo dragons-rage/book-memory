@@ -1,25 +1,16 @@
-from django.db.models import (
-    Model,
-    CharField,
-    SmallIntegerField,
-    ForeignKey,
-    TextField,
-    ManyToManyField,
-)
-from django.db.models.deletion import CASCADE
+from django.db import models
 
-
-class Author(Model):
-    first_name = CharField(max_length=50)
-    last_name = CharField(max_length=50)
+class Author(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 
-class Series(Model):
-    title = CharField(max_length=100)
-    missing = SmallIntegerField(blank=True, null=True, default=None)
+class Series(models.Model):
+    title = models.CharField(max_length=100)
+    missing = models.SmallIntegerField(blank=True, null=True, default=None)
 
     def __str__(self):
         return str(self.title)
@@ -30,39 +21,37 @@ class Series(Model):
         verbose_name_plural = "Series"
 
 
-class Location(Model):
-    name = CharField(max_length=25)
+class Location(models.Model):
+    name = models.CharField(max_length=25)
 
     def __str__(self):
         return str(self.name)
 
-class Ratings(Model):
-    name = CharField(max_length=25)
+class Ratings(models.Model):
+    name = models.CharField(max_length=25)
 
     def __str__(self):
         return str(self.name)
+    
+    class Meta:
+        verbose_name = "Status"
+        verbose_name_plural = "Statuses"
 
-class Book(Model):
-    RATING_CHOICES = [
-        (1, "Not Started"),
-        (2, "Finished"),
-        (3, "On Hold"),
-        (4, "Dropped"),
-        (5, "Partial"),
-        (6, "Reading"),
-        (7, "Hated"),
-    ]
+class Book(models.Model):
 
-    title = CharField(max_length=100)
-    authors = ManyToManyField(
+    title = models.CharField(max_length=100)
+    authors = models.ManyToManyField(
         Author, blank=True, default=None, related_name="books"
     )
-    rating = SmallIntegerField(choices=RATING_CHOICES, default=1)
-    progress = SmallIntegerField(blank=True, null=True)
-    asin = CharField(max_length=15, blank=True, null=True, default="")
-    notes = TextField(blank=True)
-    series = ForeignKey(Series, on_delete=CASCADE, null=True, default=None, blank=True)
-    location = ForeignKey(Location, on_delete=CASCADE, null=True, default=None)
+    status = models.ForeignKey(Ratings, on_delete=models.SET_NULL, null=True, default=None)
+    progress = models.SmallIntegerField(blank=True, null=True)
+    asin = models.CharField(max_length=15, blank=True, null=True, default="")
+    notes = models.TextField(blank=True)
+    series = models.ForeignKey(Series, on_delete=models.CASCADE, null=True, default=None, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, default=None)
 
     def __str__(self):
         return str(self.title)
+
+    def authorlist(self):
+        return ", ".join(str(author) for author in self.authors.all())

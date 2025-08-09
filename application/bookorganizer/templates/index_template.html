@@ -88,6 +88,7 @@
             <th>Authors</th>
             <th>Series</th>
             <th>Audible Link</th>
+            <th>Auth List</th>
         </tr>
         {% for book in results %}
         <tr>
@@ -103,6 +104,7 @@
             </td>
             <td><a href="/?series={{ book.series }}">{{ book.series }}</a></td>
             <td><a href="https://audible.com/pd/{{ book.asin }}">{{ book.asin }}</a></td>
+            <td>{{ book.authors }}</td>     
         </tr>
         {% endfor %}
     </table>
