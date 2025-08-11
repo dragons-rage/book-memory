@@ -2,13 +2,16 @@ FROM python:3.13.6-alpine
 
 ENV BIND=0.0.0.0
 ENV PORT=8000
+ENV USER=donny
+ENV PASS=darko
+ENV EMAIL=donny@test.com
 
 # Prep Work
-COPY application requirements.txt /app/
+COPY requirements.txt /tmp
 WORKDIR /app/
 
 # Build Commands
-RUN pip install --no-cache-dir -r requirements.txt && chmod 755 /app/run.sh
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 
 # Execution Related Stuff
@@ -16,3 +19,4 @@ VOLUME ["/app", "/app/data" ]
 EXPOSE ${PORT}
 
 CMD ["/app/run.sh"]
+

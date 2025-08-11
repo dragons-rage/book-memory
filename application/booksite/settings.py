@@ -14,6 +14,12 @@ from pathlib import Path
 import sys
 import environ, os
 
+
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -78,10 +84,7 @@ WSGI_APPLICATION = "booksite.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "data" / "db.sqlite3",
-    }
+    "default": env.db(default="sqlite:///db.sqlite3")
 }
 
 
