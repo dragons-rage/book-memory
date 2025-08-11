@@ -12,9 +12,9 @@ def index(request):
     author = request.GET.get("author", None)
     series = request.GET.get("series", None)
 
-    title_objects = Book.objects.filter(title__icontains=title) if title else Book.objects.none()
-    author_objects = Book.objects.filter(authors__full__name__icontains=author) if author else Book.objects.none()
-    series_objects = Book.objects.filter(series__title__icontains=series) if series else Book.objects.none()
+    title_objects = Book.objects.filter(title__icontains=title).order_by("title") if title else Book.objects.none()
+    author_objects = Book.objects.filter(authors__full__name__icontains=author).order_by("title") if author else Book.objects.none()
+    series_objects = Book.objects.filter(series__title__icontains=series).order_by("title") if series else Book.objects.none()
     combined_objects = title_objects | author_objects | series_objects
     context = {"results": combined_objects}
     return render(request, "index_template.html", context)
@@ -74,5 +74,5 @@ def author_detail(request):
     if not author:
         return HttpResponse(b"Author not found.", status=404)
 
-    context = {"author": author}
+    context = {"author": author, "books": author.books.all().order_by("title")}
     return render(request, "author_detail.html", context)

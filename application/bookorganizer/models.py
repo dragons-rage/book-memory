@@ -19,6 +19,7 @@ class Author(models.Model):
 
     # Full name of the author (up to 100 characters)
     full_name = models.CharField(max_length=100, default="")
+    notes = models.TextField(blank=True, default="")
 
     def __str__(self):
         """Return the author's full name as a string representation."""
@@ -88,6 +89,11 @@ class Ratings(models.Model):
     name = models.CharField(
         max_length=25,
         help_text="Status of the book (e.g., 'Read', 'Currently Reading', 'Did Not Like')"
+    )
+
+    priority = models.SmallIntegerField(
+        default=0,
+        help_text="Priority of the status (higher numbers indicate higher priority)"
     )
 
     def __str__(self):

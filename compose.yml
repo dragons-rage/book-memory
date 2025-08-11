@@ -27,9 +27,6 @@ services:
     environment:
       # - DATABASE_URL=postgres://postgres:postgres@db:5432/bookorganizer
       - DATABASE_URL=sqlite:////app/data/db.sqlite3
-      # - POSTGRES_USER=postgres
-      # - POSTGRES_PASSWORD=postgres
-      # - POSTGRES_DB=bookorganizer
     # command: ["python", "manage.py", "makemigrations"]
 
 networks:
