@@ -16,12 +16,6 @@ class Author(models.Model):
     Authors can be associated with multiple books through a many-to-many
     relationship defined in the Book model.
     """
-    
-    # Author's first name (up to 50 characters)
-    first_name = models.CharField(max_length=50)
-    
-    # Author's last name (up to 50 characters)
-    last_name = models.CharField(max_length=50)
 
     # Full name of the author (up to 100 characters)
     full_name = models.CharField(max_length=100, default="")
@@ -30,12 +24,6 @@ class Author(models.Model):
         """Return the author's full name as a string representation."""
         if self.full_name:
             return self.full_name
-        if self.first_name and self.last_name:
-            return f"{self.first_name} {self.last_name}"
-        if self.first_name:
-            return self.first_name
-        if self.last_name:
-            return self.last_name
         return ""
 
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.cache import caches
 
-from .models import Book
+from .models import Book, Author, Series
 
 
 def index(request):
@@ -13,7 +13,7 @@ def index(request):
     series = request.GET.get("series", None)
 
     title_objects = Book.objects.filter(title__icontains=title) if title else Book.objects.none()
-    author_objects = Book.objects.filter(authors__first_name__icontains=author) | Book.objects.filter(authors__last_name__icontains=author) if author else Book.objects.none()
+    author_objects = Book.objects.filter(authors__full__name__icontains=author) if author else Book.objects.none()
     series_objects = Book.objects.filter(series__title__icontains=series) if series else Book.objects.none()
     combined_objects = title_objects | author_objects | series_objects
     context = {"results": combined_objects}
@@ -37,3 +37,42 @@ def create(request):
 def purge_books(request):
     Book.objects.all().delete()
     return HttpResponse(b"All books have been deleted.")
+
+def create_series(request):
+    if request.method == 'GET':
+        return render(request, "create_series.html")
+    if request.method == 'POST':
+        title = request.POST.get("title", None)
+        missing = request.POST.get("missing", None)
+
+        if title is None:
+            return HttpResponse(b"Title is not set")
+
+        series = Series(title=title, missing=missing)
+        series.save()
+        return HttpResponse("Create Series %s" % request.POST.dict())
+    return HttpResponse(b"Method not supported.", status=400)
+
+def create_author(request):
+    if request.method == 'GET':
+        return render(request, "create_author.html")
+    if request.method == 'POST':
+        name = request.POST.get("name", None)
+        if not name:
+            return HttpResponse(b"Name is required.", status=400)
+        author = Author(name=name)
+        author.save()
+        return HttpResponse(f"Created Author {author.name}")
+    return HttpResponse(b"Method not supported.", status=400)
+
+def author_detail(request):
+    author_id = request.GET.get("author", None)
+    if not author_id:
+        return HttpResponse(b"Author ID is required.", status=400)
+
+    author = Author.objects.filter(id=author_id).first()
+    if not author:
+        return HttpResponse(b"Author not found.", status=404)
+
+    context = {"author": author}
+    return render(request, "author_detail.html", context)
