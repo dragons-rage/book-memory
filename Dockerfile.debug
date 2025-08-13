@@ -18,5 +18,5 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 VOLUME ["/app", "/app/data" ]
 EXPOSE ${PORT}
 
-CMD ["/app/run.sh"]
+CMD ["/bin/sh", "/app/run.sh"]
 

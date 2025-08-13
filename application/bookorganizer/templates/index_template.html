@@ -1,3 +1,4 @@
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,6 +78,15 @@
         <input type="text" id="author" name="author" value="{{ request.GET.author|default:'' }}"><br>
         <label for="series">Series:</label>
         <input type="text" id="series" name="series" value="{{ request.GET.series|default:'' }}"><br>
+        <label for="media_type_id">Media Type:</label>
+        <select id="media_type_id" name="media_type_id">
+            <option value="">All</option>
+            {% for media_type in media_types %}
+                <option value="{{ media_type.id }}" {% if media_type.id == media_type_id %}selected{% endif %}>{{ media_type.name }}</option>
+                <!-- Option: {{media_type.id}} VS: {{ media_type_id }} -->
+            {% endfor %}
+
+        </select>
         <button type="submit">Search</button>
     </form>
 
@@ -87,7 +97,8 @@
             <th>Title</th>
             <th>Authors</th>
             <th>Series</th>
-            <th>Audible Link</th>
+            <th>Media Type</th>
+            <th>Link</th>
             <th>Status</th>
         </tr>
         {% for book in results %}
@@ -105,7 +116,25 @@
                 {% endif %}
             </td>
             <td><a href="/?series={{ book.series }}">{{ book.series }}</a></td>
-            <td><a href="https://audible.com/pd/{{ book.asin }}">{{ book.asin }}</a></td>
+            <td><a href="/?media_type_id={{ book.media_type.id }}">{{ book.media_type.name }}</a></td>
+            <!-- TODO: Add an option to provide own links -->
+             {% if book.link|is_asin and book.media_type.name == "Audiobook" %}
+                <td><a href="https://audible.com/pd/{{ book.link }}">Audible</a></td>
+            {% elif "j-novel.club" in book.link %}
+                <td><a href="{{ book.link }}">J-Novel Club</a></td>
+            {% else %}
+                <td>
+                    {% if book.link %}
+                        {% if book.link|is_url %}
+                            <a href="{{ book.link }}">Link</a>
+                        {% else %}
+                            {{ book.link }}
+                        {% endif %}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+            {% endif %}
             <td>{{ book.status }}</td>
         </tr>
         {% endfor %}

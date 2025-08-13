@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.cache import caches
+import logging
+from .models import Book, Author, Series, MediaType
 
-from .models import Book, Author, Series
-
+logger = logging.getLogger(__name__)
 
 def index(request):
     # cache = caches["default"]
@@ -11,12 +12,19 @@ def index(request):
     title = request.GET.get("title", None)
     author = request.GET.get("author", None)
     series = request.GET.get("series", None)
+    media_type_id = request.GET.get("media_type_id", None)
+    media_types = MediaType.objects.all()
+    if media_type_id:
+        books = Book.objects.filter(media_type__id=media_type_id).order_by("title")
+    elif title or author or series:
+        title_objects = Book.objects.filter(title__icontains=title).order_by("title") if title else Book.objects.none()
+        author_objects = Book.objects.filter(authors__full__name__icontains=author).order_by("title") if author else Book.objects.none()
+        series_objects = Book.objects.filter(series__title__icontains=series).order_by("title") if series else Book.objects.none()
+        books = title_objects | author_objects | series_objects
+    else:
+        books = Book.objects.all().order_by("title")
 
-    title_objects = Book.objects.filter(title__icontains=title).order_by("title") if title else Book.objects.none()
-    author_objects = Book.objects.filter(authors__full__name__icontains=author).order_by("title") if author else Book.objects.none()
-    series_objects = Book.objects.filter(series__title__icontains=series).order_by("title") if series else Book.objects.none()
-    combined_objects = title_objects | author_objects | series_objects
-    context = {"results": combined_objects}
+    context = {"results": books, "media_types": media_types, "media_type_id": int(media_type_id) if media_type_id else None}
     return render(request, "index_template.html", context)
 
 
@@ -76,3 +84,13 @@ def author_detail(request):
 
     context = {"author": author, "books": author.books.all().order_by("title")}
     return render(request, "author_detail.html", context)
+
+def migrate_media_types(request):
+    books = Book.objects.all()
+    for book in books:
+        logger.warning(f"Updating media type for book {book.title} to Audiobook")
+        if not book.media_type:
+            book.media_type = MediaType.objects.get_or_create(name="Audiobook")[0]
+            logger.warning(f"Updated media type for book {book.title} to Audiobook")
+            book.save()
+    return HttpResponse(b"Media types migrated.")

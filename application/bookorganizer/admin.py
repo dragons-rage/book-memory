@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Book, Series, Author, Location, Ratings
+from .models import Book, Series, Author, Location, Ratings, MediaType
 
 
 # Register your models here.
 #
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ["title", "authorlist", "series", "status", "location"]
+    list_display = ["title", "authorlist", "series", "media_type", "status", "location"]
     ordering = ["title"]
     search_fields = ["title", "asin"]
     pass
@@ -36,4 +36,11 @@ class LocationAdmin(admin.ModelAdmin):
 class RatingsAdmin(admin.ModelAdmin):
     list_display = ["name", "priority"]
     ordering = ["priority"]
+    pass
+
+@admin.register(MediaType)
+class MediaTypeAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
+    search_fields = ["name"]
     pass

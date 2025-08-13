@@ -105,6 +105,23 @@ class Ratings(models.Model):
         verbose_name = "Status"
         verbose_name_plural = "Statuses"
 
+class MediaType(models.Model):
+    """
+    Represents the type or genre of a book.
+    """
+    name = models.CharField(
+        max_length=25,
+        help_text="Type of the media (e.g., 'Novel', 'Manga', 'Audiobook')"
+    )
+
+    def __str__(self):
+        """Return the type name as a string representation."""
+        return str(self.name)
+
+    class Meta:
+        verbose_name = "Type"
+        verbose_name_plural = "Types"
+
 
 class Book(models.Model):
     """
@@ -116,7 +133,7 @@ class Book(models.Model):
 
     # Title of the book (up to 100 characters)
     title = models.CharField(
-        max_length=100,
+        max_length=255,
         help_text="Full title of the book"
     )
     
@@ -128,7 +145,15 @@ class Book(models.Model):
         related_name="books",
         help_text="Authors who wrote this book"
     )
-    
+
+    media_type = models.ForeignKey(
+        MediaType,
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None,
+        related_name="books",
+        help_text="Type of media (e.g., 'Novel', 'Manga', 'Audiobook')"
+    )
     # Current reading status/rating of the book
     # Uses SET_NULL to preserve book data if status is deleted
     status = models.ForeignKey(
@@ -146,15 +171,17 @@ class Book(models.Model):
         help_text="Reading progress (percentage or page number)"
     )
     
-    # Amazon Standard Identification Number for the book
-    asin = models.CharField(
-        max_length=15, 
+    # Link or ASIN for the book
+    # TODO: Implement more codes and link formats
+    link = models.CharField(
+        max_length=255, 
         blank=True, 
         null=True, 
         default="",
-        help_text="Amazon ASIN for this book"
+        help_text="Link or ASIN for this book"
     )
-    
+    # TODO: Add a spot for Extra Links
+
     # Personal notes about the book
     notes = models.TextField(
         blank=True,
@@ -182,6 +209,20 @@ class Book(models.Model):
         related_name="books",
         help_text="Where this book is stored"
     )
+
+    # img = models.ImageField(
+    #     upload_to='book_covers/',
+    #     blank=True,
+    #     null=True,
+    #     help_text="Cover image for this book"
+    # )
+
+    # epub = models.FileField(
+    #     upload_to='book_epubs/',
+    #     blank=True,
+    #     null=True,
+    #     help_text="EPUB file for this book"
+    # )
 
     def __str__(self):
         """Return the book title as a string representation."""
