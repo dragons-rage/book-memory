@@ -84,13 +84,3 @@ def author_detail(request):
 
     context = {"author": author, "books": author.books.all().order_by("title")}
     return render(request, "author_detail.html", context)
-
-def migrate_media_types(request):
-    books = Book.objects.all()
-    for book in books:
-        logger.warning(f"Updating media type for book {book.title} to Audiobook")
-        if not book.media_type:
-            book.media_type = MediaType.objects.get_or_create(name="Audiobook")[0]
-            logger.warning(f"Updated media type for book {book.title} to Audiobook")
-            book.save()
-    return HttpResponse(b"Media types migrated.")
