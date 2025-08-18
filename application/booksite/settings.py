@@ -163,5 +163,5 @@ LOGGING = {
 }
 
 CACHES = {
-    "default": env.cache(default="locmem://")
+    "default": env.cache(default="locmemcache://")
 }

@@ -28,6 +28,7 @@ services:
       # - DATABASE_URL=postgres://postgres:postgres@db:5432/bookorganizer
       - DATABASE_URL=sqlite:////app/data/db.sqlite3
     # command: ["python", "manage.py", "makemigrations"]
+    # command: ["python", "manage.py", "dumpdata"]
 
 networks:
   bookorganizer_network:

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.cache import caches
 import logging
-from .models import Book, Author, Series, MediaType
+from .models import Book, Author, Series, MediaType, Ratings
 
 logger = logging.getLogger(__name__)
 
@@ -13,9 +13,13 @@ def index(request):
     author = request.GET.get("author", None)
     series = request.GET.get("series", None)
     media_type_id = request.GET.get("media_type_id", None)
+    status_id = request.GET.get("status_id", None)
     media_types = MediaType.objects.all()
+    statuses = Ratings.objects.all()
     if media_type_id:
         books = Book.objects.filter(media_type__id=media_type_id).order_by("title")
+    elif status_id:
+        books = Book.objects.filter(status__id=status_id).order_by("title")
     elif title or author or series:
         title_objects = Book.objects.filter(title__icontains=title).order_by("title") if title else Book.objects.none()
         author_objects = Book.objects.filter(authors__full__name__icontains=author).order_by("title") if author else Book.objects.none()
@@ -24,7 +28,13 @@ def index(request):
     else:
         books = Book.objects.all().order_by("title")
 
-    context = {"results": books, "media_types": media_types, "media_type_id": int(media_type_id) if media_type_id else None}
+    context = {
+        "results": books,
+        "media_types": media_types,
+        "media_type_id": int(media_type_id) if media_type_id else None,
+        "status_id": int(status_id) if status_id else None,
+        "statuses": statuses,
+    }
     return render(request, "index_template.html", context)
 
 
