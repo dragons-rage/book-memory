@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Organizer - Add New Entry</title>
+    <title>Book Organizer - Add Book</title>
     <link rel="stylesheet" type="text/css" href="{% static 'bookorganizer/css/style.css' %}">
 </head>
 <body>
     <header>
-        <h1>📚 Book Organizer</h1>
+        <h1>📚 Book Organizer - Add Author</h1>
         <nav>
             <a href="/">← Back to Search</a>
         </nav>
@@ -29,6 +29,8 @@
                     <legend class="visually-hidden">Book Information</legend>
                     <div class="form-content">
                         <table>
+                            <!-- TODO: Add a refresh button to series, author form fields -->
+                            <!-- TODO: Change the author form to allow easier author selection -->
                             {% for field in form %}
                             <tr>
                                 <td>{{ field.label_tag }}</td>

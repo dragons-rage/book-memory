@@ -4,11 +4,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Index Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Organizer - Search</title>
     <link rel="stylesheet" type="text/css" href="{% static 'bookorganizer/css/style.css' %}">
 </head>
 <body>
-    <h1>Welcome to Book Memory</h1>
+    <h1>📚 Book Organizer</h1>
     <form method="get" action="/">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" value="{{ request.GET.title|default:'' }}"><br>
