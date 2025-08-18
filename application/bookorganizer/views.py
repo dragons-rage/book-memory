@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.core.cache import caches
 import logging
 from .models import Book, Author, Series, MediaType, Ratings
+from .forms import BookForm
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,9 @@ def index(request):
     }
     return render(request, "index_template.html", context)
 
+def index_form(request):
+    form = BookForm()
+    return render(request, "index_form.html", {"form": form})
 
 
 def create(request):

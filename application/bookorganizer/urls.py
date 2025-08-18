@@ -9,4 +9,5 @@ urlpatterns = [
     path("author", views.author_detail, name="author_detail"),
     path("init_system", views_admin.init_system, name="init_system"),
     path("backup", views_admin.backup_system, name="backup_system"),
+    path("form", views.index_form, name="index_form"),
 ]

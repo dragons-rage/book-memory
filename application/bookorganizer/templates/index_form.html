@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Organizer - Add New Entry</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bookorganizer/css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>📚 Book Organizer</h1>
+        <nav>
+            <a href="/">← Back to Search</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="form-container">
+            <h2>Add New Book</h2>
+            <p class="form-description">
+                Fill in the details below to add a new book to your collection. 
+                Fields marked with <span class="required-indicator">*</span> are required.
+            </p>
+            
+            <form method="post" class="book-form" novalidate>
+                {% csrf_token %}
+                <fieldset>
+                    <legend class="visually-hidden">Book Information</legend>
+                    <div class="form-content">
+                        <table>
+                            {% for field in form %}
+                            <tr>
+                                <td>{{ field.label_tag }}</td>
+                                <td>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <br><small class="form-text text-muted">{{ field.help_text }}</small>
+                                    {% endif %}
+                                    {% if field.errors %}
+                                        <ul class="errorlist">
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </fieldset>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" aria-describedby="save-help">
+                        💾 Save Book
+                    </button>
+                    <a href="/" class="btn btn-secondary" role="button">
+                        Cancel
+                    </a>
+                </div>
+                
+                <div id="save-help" class="form-help">
+                    <small>Click "Save Book" to add this book to your collection, or "Cancel" to return without saving.</small>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="{% static 'bookorganizer/js/bookorganizer.js' %}"></script>
+</body>
+</html>
