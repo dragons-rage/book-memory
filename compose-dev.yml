@@ -1,7 +1,13 @@
+# This file is used for development purposes.
+# It is not used for production.
+# It is used to run the application in a container.
+# It can be used to run the database in a container.
+# It can be used to run the application in a container.
 name: bookorganizer
 
 services:
-  # db:
+  # postgres:
+  #   container_name: postgres
   #   image: postgres:16
   #   environment:
   #     POSTGRES_USER: postgres
@@ -13,6 +19,7 @@ services:
   #     - 5432:5432
   #   # user: 1002
   django:
+    container_name: django
     image: localhost/books:latest
     build:
       context: .
@@ -25,7 +32,7 @@ services:
     # depends_on:
     #   - db
     environment:
-      # - DATABASE_URL=postgres://postgres:postgres@db:5432/bookorganizer
+      # - DATABASE_URL=postgres://postgres:postgres@postgres:5432/bookorganizer
       - DATABASE_URL=sqlite:////app/data/db.sqlite3
     # command: ["python", "manage.py", "makemigrations"]
     # command: ["python", "manage.py", "dumpdata"]
