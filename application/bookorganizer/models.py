@@ -19,10 +19,20 @@ class Author(models.Model):
 
     # Full name of the author (up to 100 characters)
     full_name = models.CharField(max_length=100, default="")
+    official_alias = models.CharField(max_length=100, blank=True, default="")
+    alias = models.CharField(max_length=100, blank=True, default="")
+    # Used for sorting and display purposes
+    first_name = models.CharField(max_length=100, blank=True, default="")
+    last_name = models.CharField(max_length=100, blank=True, default="")
+
     notes = models.TextField(blank=True, default="")
 
     def __str__(self):
         """Return the author's full name as a string representation."""
+        if self.official_alias:
+            return self.official_alias
+        if self.first_name and self.last_name:
+            return f"{self.last_name}, {self.first_name}"
         if self.full_name:
             return self.full_name
         return ""

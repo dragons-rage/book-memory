@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.cache import caches
 import logging
 from .models import Book, Author, Series, MediaType, Ratings
@@ -98,3 +98,23 @@ def author_detail(request):
 
     context = {"author": author, "books": author.books.all().order_by("title")}
     return render(request, "author_detail.html", context)
+
+
+def get_authors_json(request):
+    """Return all authors as JSON for AJAX refresh functionality."""
+    if request.method == 'GET':
+        authors = Author.objects.all().order_by('official_alias', 'full_name', 'last_name', 'first_name')
+        authors_data = [{'id': author.id, 'full_name': str(author)} for author in authors]
+        return JsonResponse({
+            'authors': authors_data
+        })
+    return HttpResponse(b"Method not supported.", status=405)
+
+def get_series_json(request):
+    """Return all series as JSON for AJAX refresh functionality."""
+    if request.method == 'GET':
+        series = Series.objects.all().order_by('title').values('id', 'title')
+        return JsonResponse({
+            'series': list(series)
+        })
+    return HttpResponse(b"Method not supported.", status=405)

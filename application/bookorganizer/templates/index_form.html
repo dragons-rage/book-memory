@@ -33,9 +33,14 @@
                             <!-- TODO: Change the author form to allow easier author selection -->
                             {% for field in form %}
                             <tr>
-                                <td>{{ field.label_tag }}</td>
+                                <td>{{ field.label_tag }}
+                                    {% if field.name == 'authors' %}
+                                    <a href="#" id="refresh-authors">🔄</a>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {{ field }}
+
                                     {% if field.help_text %}
                                         <br><small class="form-text text-muted">{{ field.help_text }}</small>
                                     {% endif %}
