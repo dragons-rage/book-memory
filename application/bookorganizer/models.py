@@ -37,6 +37,27 @@ class Author(models.Model):
             return self.full_name
         return ""
 
+class Tags(models.Model):
+    name = models.CharField(
+        max_length=255,
+        unique = True,
+        help_text="Name of the tag."
+    )
+
+    description = models.TextField(
+        blank = True,
+        default = ""
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["name"], name="teg_name_index")
+        ]
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
 
 class Series(models.Model):
     """
@@ -58,6 +79,13 @@ class Series(models.Model):
         help_text="Number of books missing from this series"
     )
 
+    tags = models.ManyToManyField(
+        Tags, 
+        blank=True, 
+        default=None, 
+        help_text="Tags in the Series"
+    )
+
     def __str__(self):
         """Return the series title as a string representation."""
         return str(self.title)
@@ -66,6 +94,8 @@ class Series(models.Model):
         verbose_name = "Series"
         # Prevent Django from pluralizing as "Seriess"
         verbose_name_plural = "Series"
+
+
 
 
 class Location(models.Model):

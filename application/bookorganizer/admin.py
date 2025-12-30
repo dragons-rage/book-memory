@@ -1,9 +1,16 @@
 from django.contrib import admin
-from .models import Book, Series, Author, Location, Ratings, MediaType
+from .models import Book, Series, Author, Location, Ratings, MediaType, Tags
 
 
 # Register your models here.
 #
+@admin.register(Tags)
+class TagsAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    ordering = ["name"]
+    search_fields = ["name"]
+    pass
+
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ["title", "authorlist", "series", "media_type", "status", "location"]
